@@ -1,1 +1,1 @@
-include ':imageslider', ':example'
+include ':imageslider', ':example', ':example-java'

@@ -23,6 +23,8 @@ import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.view.ViewParent
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.pickth.imageslider.R
@@ -52,8 +54,7 @@ class ImageSlider : FrameLayout {
 
     private fun initializeView(orientation: Int, backColor: Int) {
         if(orientation == HORIZONTAL) {
-            mPager = ViewPager(context).apply {
-                layoutParams = ViewPager.LayoutParams()
+            mPager = HorizontalViewPager(context).apply {
                 overScrollMode = View.OVER_SCROLL_NEVER
             }
         } else {
@@ -68,9 +69,6 @@ class ImageSlider : FrameLayout {
         mPager.adapter = mAdapter
     }
 
-    /**
-     * @param orientation ImageSlider.HORIZONTAL or ImageSlider.VERTICAL
-     */
     fun addItems(items: ArrayList<Int>) {
         mAdapter.addItems(items)
         mAdapter.notifyDataSetChanged()
@@ -80,6 +78,7 @@ class ImageSlider : FrameLayout {
 
     fun setIndicator(indicatorColor: Int, indicatorSelectedColor: Int) {
         mIndicator = CircleIndicator(context, getItemCount(), mOrientation, indicatorColor, indicatorSelectedColor).apply {
+            // FrameLayout 에 맞추기 위해 LinearLayout.LayoutParams 를 안 씀
             var param = FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
                 if(orientation == HORIZONTAL) {
                     gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL

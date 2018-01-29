@@ -19,16 +19,14 @@ package com.pickth.imageslider.view
 import android.content.Context
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
-import android.view.MotionEvent
 import android.view.View
-
 
 /**
  * Created by yonghoon on 2018-01-29
  * Blog   : http://blog.pickth.com
  */
 
-class VerticalViewPager : ViewPager {
+class HorizontalViewPager: ViewPager {
     constructor(context: Context) : super(context) {
         initializeView()
     }
@@ -37,13 +35,13 @@ class VerticalViewPager : ViewPager {
     }
 
     private fun initializeView() {
-        setPageTransformer(true, VerticalPageTransformer())
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var heightMeasureSpec = heightMeasureSpec
         val mode = View.MeasureSpec.getMode(heightMeasureSpec)
-
+        // Unspecified means that the ViewPager is in a ScrollView WRAP_CONTENT.
+        // At Most means that the ViewPager is not in a ScrollView WRAP_CONTENT.
         if (mode == View.MeasureSpec.UNSPECIFIED || mode == View.MeasureSpec.AT_MOST) {
             // super has to be called in the beginning so the child views can be initialized.
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -58,56 +56,5 @@ class VerticalViewPager : ViewPager {
         }
         // super has to be called again so the new specs are treated as exact measurements
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-    }
-
-    /**
-     * Swaps the X and Y coordinates of your touch event.
-     */
-    private fun swapXY(ev: MotionEvent): MotionEvent {
-        val width = width.toFloat()
-        val height = height.toFloat()
-
-        val newX = ev.y / height * width
-        val newY = ev.x / width * height
-
-        ev.setLocation(newX, newY)
-
-        return ev
-    }
-
-    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-        val intercepted = super.onInterceptTouchEvent(swapXY(ev))
-        swapXY(ev) // return touch coordinates to original reference frame for any child views
-        return intercepted
-    }
-
-    override fun onTouchEvent(ev: MotionEvent): Boolean {
-        return super.onTouchEvent(swapXY(ev))
-    }
-
-    private inner class VerticalPageTransformer : ViewPager.PageTransformer {
-
-        override fun transformPage(view: View, position: Float) {
-
-            when {
-                (position < -1) -> // [-Infinity,-1)
-                    // This page is way off-screen to the left.
-                    view.alpha = 0f
-                (position <= 1) -> { // [-1,1]
-                    view.alpha = 1f
-
-                    // Counteract the default slide transition
-                    view.translationX = view.width * -position
-
-                    //set Y position to swipe in from top
-                    val yPosition = position * view.height
-                    view.translationY = yPosition
-
-                }
-                else -> // (1,+Infinity]
-                    // This page is way off-screen to the right.
-                    view.alpha = 0f
-            }
-        }
     }
 }

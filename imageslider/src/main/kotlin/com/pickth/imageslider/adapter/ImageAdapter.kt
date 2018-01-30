@@ -21,7 +21,8 @@ import android.support.v4.view.PagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.pickth.imageslider.GlideApp
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.pickth.imageslider.R
 import kotlinx.android.synthetic.main.slide.view.*
 
@@ -32,15 +33,15 @@ import kotlinx.android.synthetic.main.slide.view.*
 
 class ImageAdapter(context: Context, val backColor: Int): PagerAdapter() {
     private var inflater = LayoutInflater.from(context)
-    private var mItems = ArrayList<Int>()
+    private var mIntItems = ArrayList<Int>()
 
     fun addItems(items: ArrayList<Int>) {
-        mItems.clear()
-        mItems.addAll(items)
+        mIntItems.clear()
+        mIntItems.addAll(items)
     }
 
     fun addItem(item: Int) {
-        mItems.add(item)
+        mIntItems.add(item)
     }
 
     override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
@@ -53,11 +54,10 @@ class ImageAdapter(context: Context, val backColor: Int): PagerAdapter() {
                 false).apply {
 
             slide_image.setBackgroundColor(backColor)
-            GlideApp.with(context)
-                    .load(mItems[position])
-                    .fitCenter()
+            Glide.with(context)
+                    .load(mIntItems[position])
+                    .apply(RequestOptions().fitCenter())
                     .into(slide_image)
-
         }
 
         container.addView(imageView)
@@ -66,5 +66,5 @@ class ImageAdapter(context: Context, val backColor: Int): PagerAdapter() {
 
     override fun isViewFromObject(view: View, `object`: Any?): Boolean = view == `object`
 
-    override fun getCount(): Int = mItems.size
+    override fun getCount(): Int = mIntItems.size
 }

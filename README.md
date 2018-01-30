@@ -12,7 +12,7 @@ Library to implement the image slider from viewpager (minSdkVersion=19).
 #### Gradle
 ```groovy
 dependencies {
-    implementation 'com.pickth.imageslider:1.0.0'
+    implementation 'com.pickth.imageslider:1.0.1'
 }
 ```
 
@@ -103,4 +103,5 @@ Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License.```
+limitations under the License.
+```

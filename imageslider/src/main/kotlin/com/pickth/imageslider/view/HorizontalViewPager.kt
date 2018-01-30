@@ -40,8 +40,7 @@ class HorizontalViewPager: ViewPager {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var heightMeasureSpec = heightMeasureSpec
         val mode = View.MeasureSpec.getMode(heightMeasureSpec)
-        // Unspecified means that the ViewPager is in a ScrollView WRAP_CONTENT.
-        // At Most means that the ViewPager is not in a ScrollView WRAP_CONTENT.
+
         if (mode == View.MeasureSpec.UNSPECIFIED || mode == View.MeasureSpec.AT_MOST) {
             // super has to be called in the beginning so the child views can be initialized.
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)

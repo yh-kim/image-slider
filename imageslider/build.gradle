@@ -10,7 +10,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0.0"
+        versionName propVersionName
 
     }
 
@@ -44,3 +44,5 @@ dependencies {
 repositories {
     mavenCentral()
 }
+
+apply from: '../bintray-upload.gradle'

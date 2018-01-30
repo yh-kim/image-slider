@@ -4,14 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.pickth.imageslider.example.java.MainActivity">
 
     <com.pickth.imageslider.view.ImageSlider
         android:id="@+id/is_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:orientation="vertical"
         app:background_color="@color/colorAccent"
         app:indicator_color="@color/colorPrimary"
         app:indicator_selected_color="@color/colorAccent" />
+
+    <TextView
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"
+        android:text="horizontal image slider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

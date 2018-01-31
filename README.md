@@ -1,5 +1,7 @@
 # Image Slider
-Library to implement the image slider from viewpager (minSdkVersion=19).
+Library to implement the image slider from viewpager (minSdkVersion=15).<br>
+Only supported in kotlin language.<br>
+**Do not use it in java projects.**
 
 ## Screenshots
 <div style="display:flex;" >
@@ -12,7 +14,7 @@ Library to implement the image slider from viewpager (minSdkVersion=19).
 #### Gradle
 ```groovy
 dependencies {
-    implementation 'com.pickth.imageslider:1.0.1'
+    implementation 'com.pickth:imageslider:1.0.5'
 }
 ```
 

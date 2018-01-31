@@ -20,7 +20,6 @@ import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
-import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.pickth.imageslider.R
@@ -47,8 +46,7 @@ class CircleIndicator(context: Context, count: Int, circleOrientation: Int, val 
     private fun initializeView(count: Int) {
         for(i in 0 until count) {
             val ivCircle = ImageView(context).apply {
-                id = View.generateViewId()
-                background = circleView
+                backgroundDrawable = circleView
             }
 
             addView(ivCircle)

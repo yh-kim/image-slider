@@ -14,7 +14,7 @@ Only supported in kotlin language.<br>
 #### Gradle
 ```groovy
 dependencies {
-    implementation 'com.pickth:imageslider:1.0.5'
+    implementation 'com.pickth:imageslider:1.0.7'
 }
 ```
 

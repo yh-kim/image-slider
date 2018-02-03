@@ -39,8 +39,5 @@ dependencies {
     implementation "org.jetbrains.anko:anko-commons:0.10.1"
     implementation "org.jetbrains.anko:anko-sdk25:0.10.1"
 }
-repositories {
-    mavenCentral()
-}
 
 apply from: '../bintray-upload.gradle'

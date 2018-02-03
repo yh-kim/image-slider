@@ -1,7 +1,5 @@
 # Image Slider
 Library to implement the image slider from viewpager (minSdkVersion=15).<br>
-Only supported in kotlin language.<br>
-**Do not use it in java projects.**
 
 ## Screenshots
 <div style="display:flex;" >
@@ -14,7 +12,7 @@ Only supported in kotlin language.<br>
 #### Gradle
 ```groovy
 dependencies {
-    implementation 'com.pickth:imageslider:1.0.7'
+    implementation 'com.pickth:imageslider:1.0.8'
 }
 ```
 
@@ -33,7 +31,7 @@ protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    ArrayList items = new ArrayList<Integer>();
+    ArrayList<Integer> items = new ArrayList<>();
     items.add(R.drawable.a);
     items.add(R.drawable.b);
     items.add(R.drawable.c);

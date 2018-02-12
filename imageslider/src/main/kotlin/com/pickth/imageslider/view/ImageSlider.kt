@@ -27,6 +27,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.pickth.imageslider.R
 import com.pickth.imageslider.adapter.ImageAdapter
+import com.pickth.imageslider.listener.OnImageTouchListener
 
 /**
  * Created by yonghoon on 2018-01-29
@@ -65,6 +66,11 @@ class ImageSlider : FrameLayout {
 
         mAdapter = ImageAdapter(context, backColor)
         mPager.adapter = mAdapter
+    }
+
+    fun setOnImageTouchListener(onImageTouchListener: OnImageTouchListener) {
+        mAdapter.setOnImageTouchListener(onImageTouchListener)
+        mAdapter.notifyDataSetChanged()
     }
 
     fun addItems(items: ArrayList<Int>) {

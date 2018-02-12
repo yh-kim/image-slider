@@ -2,7 +2,9 @@ package com.pickth.imageslider.example.java;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
+import com.pickth.imageslider.listener.OnImageTouchListener;
 import com.pickth.imageslider.view.ImageSlider;
 
 import java.util.ArrayList;
@@ -20,6 +22,17 @@ public class MainActivity extends AppCompatActivity {
         items.add(R.drawable.c);
 
         ImageSlider is = findViewById(R.id.is_main);
+        is.setOnImageTouchListener(new OnImageTouchListener() {
+            @Override
+            public void onClickListener(int position) {
+                // do something
+            }
+
+            @Override
+            public void onLongClickListener(int position) {
+                // do something
+            }
+        });
         is.addItems(items);
     }
 }

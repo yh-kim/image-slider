@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.pickth.imageslider.R
+import com.pickth.imageslider.listener.OnImageTouchListener
 import kotlinx.android.synthetic.main.slide.view.*
 
 /**
@@ -34,6 +35,7 @@ import kotlinx.android.synthetic.main.slide.view.*
 class ImageAdapter(context: Context, val backColor: Int): PagerAdapter() {
     private var inflater = LayoutInflater.from(context)
     private var mIntItems = ArrayList<Int>()
+    private var mTouchListener: OnImageTouchListener? = null
 
     fun addItems(items: ArrayList<Int>) {
         mIntItems.clear()
@@ -42,6 +44,10 @@ class ImageAdapter(context: Context, val backColor: Int): PagerAdapter() {
 
     fun addItem(item: Int) {
         mIntItems.add(item)
+    }
+
+    fun setOnImageTouchListener(onImageTouchListener: OnImageTouchListener) {
+        mTouchListener = onImageTouchListener
     }
 
     override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
@@ -58,6 +64,11 @@ class ImageAdapter(context: Context, val backColor: Int): PagerAdapter() {
                     .load(mIntItems[position])
                     .apply(RequestOptions().fitCenter())
                     .into(slide_image)
+            setOnClickListener { mTouchListener?.onClickListener(position) }
+            setOnLongClickListener {
+                mTouchListener?.onLongClickListener(position)
+                true
+            }
         }
 
         container.addView(imageView)

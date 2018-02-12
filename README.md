@@ -12,7 +12,7 @@ Library to implement the image slider from viewpager (minSdkVersion=15).<br>
 #### Gradle
 ```groovy
 dependencies {
-    implementation 'com.pickth:imageslider:1.0.8'
+    implementation 'com.pickth:imageslider:1.0.9'
 }
 ```
 
@@ -38,6 +38,18 @@ protected void onCreate(Bundle savedInstanceState) {
 
     ImageSlider is = findViewById(R.id.is_main);
     is.addItems(items);
+    
+    is.setOnImageTouchListener(new OnImageTouchListener() {
+                @Override
+                public void onClickListener(int position) {
+                    // do something
+                }
+    
+                @Override
+                public void onLongClickListener(int position) {
+                    // do something
+                }
+            });
 }
 ```
 
@@ -55,6 +67,16 @@ override fun onCreate(savedInstanceState: Bundle?) {
     }
 
     is_main.addItems(items)
+    
+    is_main.setOnImageTouchListener(object: OnImageTouchListener {
+                override fun onClickListener(position: Int) {
+                    // do something
+                }
+    
+                override fun onLongClickListener(position: Int) {
+                    // do something
+                }
+            })
 }
 ```
 

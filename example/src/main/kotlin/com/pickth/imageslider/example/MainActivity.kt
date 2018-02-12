@@ -2,6 +2,8 @@ package com.pickth.imageslider.example
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import com.pickth.imageslider.listener.OnImageTouchListener
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -16,6 +18,16 @@ class MainActivity : AppCompatActivity() {
             add(R.drawable.movie_image)
             add(R.drawable.movie_image)
         }
+
+        is_main.setOnImageTouchListener(object: OnImageTouchListener {
+            override fun onClickListener(position: Int) {
+                // do something
+            }
+
+            override fun onLongClickListener(position: Int) {
+                // do something
+            }
+        })
 
         is_main.addItems(items)
     }

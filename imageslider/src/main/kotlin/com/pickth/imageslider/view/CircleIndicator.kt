@@ -30,64 +30,66 @@ import org.jetbrains.anko.backgroundDrawable
  * Blog   : http://blog.pickth.com
  */
 
-class CircleIndicator(context: Context, count: Int, circleOrientation: Int, val indicatorColor: Int, val indicatorSelectedColor: Int): LinearLayout(context, null, 0), ViewPager.OnPageChangeListener {
-    private var isFirst = true
-    private val mCircleViews = ArrayList<ImageView>()
-    private var size = 15
-    private var itemCount = count
-    private var circleView = ContextCompat.getDrawable(context, R.drawable.circle_view).apply { (this as? GradientDrawable)?.setColor(indicatorColor) }
-    private var circleSelectedView = ContextCompat.getDrawable(context, R.drawable.circle_view).apply { (this as? GradientDrawable)?.setColor(indicatorSelectedColor) }
+class CircleIndicator(context: Context, count: Int, circleOrientation: Int, val indicatorColor: Int, val indicatorSelectedColor: Int) :
+    LinearLayout(context, null, 0),
+    ViewPager.OnPageChangeListener {
+  private var isFirst = true
+  private val mCircleViews = ArrayList<ImageView>()
+  private var size = 15
+  private var itemCount = count
+  private var circleView = ContextCompat.getDrawable(context, R.drawable.circle_view).apply { (this as? GradientDrawable)?.setColor(indicatorColor) }
+  private var circleSelectedView = ContextCompat.getDrawable(context, R.drawable.circle_view).apply { (this as? GradientDrawable)?.setColor(indicatorSelectedColor) }
 
-    init {
-        orientation = circleOrientation
-        initializeView(count)
+  init {
+    orientation = circleOrientation
+    initializeView(count)
+  }
+
+  private fun initializeView(count: Int) {
+    for(i in 0 until count) {
+      val ivCircle = ImageView(context).apply {
+        backgroundDrawable = circleView
+      }
+
+      addView(ivCircle)
+      mCircleViews.add(ivCircle)
     }
 
-    private fun initializeView(count: Int) {
-        for(i in 0 until count) {
-            val ivCircle = ImageView(context).apply {
-                backgroundDrawable = circleView
-            }
+    setViewSize(size)
+  }
 
-            addView(ivCircle)
-            mCircleViews.add(ivCircle)
-        }
-
-        setViewSize(size)
-    }
-
-    private fun setViewSize(size: Int) {
-        val param = LinearLayout.LayoutParams(size, size)
+  private fun setViewSize(size: Int) {
+    val param = LinearLayout.LayoutParams(size, size)
 //        val margin = size/10
 
-        if(orientation == LinearLayout.VERTICAL) {
-            val margin = 12
-            param.setMargins(0, margin,0, margin)
-        } else {
-            val margin = 15
-            param.setMargins(margin,0,margin,0)
-         }
-
-        for(i in mCircleViews) {
-            i.layoutParams = param
-        }
+    if(orientation == LinearLayout.VERTICAL) {
+      val margin = 12
+      param.setMargins(0, margin, 0, margin)
+    } else {
+      val margin = 15
+      param.setMargins(margin, 0, margin, 0)
     }
 
-    override fun onPageScrollStateChanged(state: Int) {
+    for(i in mCircleViews) {
+      i.layoutParams = param
+    }
+  }
+
+  override fun onPageScrollStateChanged(state: Int) {
+  }
+
+  override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+    if(isFirst && positionOffset == 0f && positionOffsetPixels == 0) {
+      onPageSelected(0)
+      isFirst = false
+    }
+  }
+
+  override fun onPageSelected(position: Int) {
+    for(item in mCircleViews) {
+      item.backgroundDrawable = circleView
     }
 
-    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-        if(isFirst && positionOffset == 0f && positionOffsetPixels == 0) {
-            onPageSelected(0)
-            isFirst = false
-        }
-    }
-
-    override fun onPageSelected(position: Int) {
-        for(item in mCircleViews) {
-            item.backgroundDrawable = circleView
-        }
-
-        mCircleViews[position].backgroundDrawable =  circleSelectedView
-    }
+    mCircleViews[position].backgroundDrawable = circleSelectedView
+  }
 }

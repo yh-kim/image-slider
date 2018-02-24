@@ -26,34 +26,35 @@ import android.view.View
  * Blog   : http://blog.pickth.com
  */
 
-class HorizontalViewPager: ViewPager {
-    constructor(context: Context) : super(context) {
-        initializeView()
-    }
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        initializeView()
-    }
+class HorizontalViewPager : ViewPager {
+  constructor(context: Context) : super(context) {
+    initializeView()
+  }
 
-    private fun initializeView() {
-    }
+  constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+    initializeView()
+  }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        var heightMeasureSpec = heightMeasureSpec
-        val mode = View.MeasureSpec.getMode(heightMeasureSpec)
+  private fun initializeView() {
+  }
 
-        if (mode == View.MeasureSpec.UNSPECIFIED || mode == View.MeasureSpec.AT_MOST) {
-            // super has to be called in the beginning so the child views can be initialized.
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-            var height = 0
-            for (i in 0 until childCount) {
-                val child = getChildAt(i)
-                child.measure(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
-                val h = child.measuredHeight
-                if (h > height) height = h
-            }
-            heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY)
-        }
-        // super has to be called again so the new specs are treated as exact measurements
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+  override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    var heightMeasureSpec = heightMeasureSpec
+    val mode = View.MeasureSpec.getMode(heightMeasureSpec)
+
+    if(mode == View.MeasureSpec.UNSPECIFIED || mode == View.MeasureSpec.AT_MOST) {
+      // super has to be called in the beginning so the child views can be initialized.
+      super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+      var height = 0
+      for(i in 0 until childCount) {
+        val child = getChildAt(i)
+        child.measure(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+        val h = child.measuredHeight
+        if(h > height) height = h
+      }
+      heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY)
     }
+    // super has to be called again so the new specs are treated as exact measurements
+    super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+  }
 }

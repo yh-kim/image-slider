@@ -18,6 +18,8 @@ package com.pickth.imageslider.view
 
 import android.content.Context
 import android.content.res.TypedArray
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
@@ -28,6 +30,8 @@ import android.widget.LinearLayout
 import com.pickth.imageslider.R
 import com.pickth.imageslider.adapter.ImageAdapter
 import com.pickth.imageslider.listener.OnImageTouchListener
+import java.io.File
+import java.net.URI
 
 /**
  * Created by yonghoon on 2018-01-29
@@ -35,88 +39,116 @@ import com.pickth.imageslider.listener.OnImageTouchListener
  */
 
 class ImageSlider : FrameLayout {
-    val HORIZONTAL = LinearLayout.HORIZONTAL
-    val VERTICAL = LinearLayout.VERTICAL
+  val HORIZONTAL = LinearLayout.HORIZONTAL
+  val VERTICAL = LinearLayout.VERTICAL
 
-    private lateinit var mAdapter: ImageAdapter
-    private lateinit var mPager: ViewPager
-    private lateinit var mIndicator: CircleIndicator
-    private var mOrientation = HORIZONTAL
-    private var indicatorColor = 0
-    private var indicatorSelectedColor = 0
+  private lateinit var mAdapter: ImageAdapter
+  private lateinit var mPager: ViewPager
+  private lateinit var mIndicator: CircleIndicator
+  private var mOrientation = HORIZONTAL
+  private var indicatorColor = 0
+  private var indicatorSelectedColor = 0
 
-    constructor(context: Context) : this(context, null, 0)
-    constructor(context: Context, attrs: AttributeSet) : this(context, attrs, 0)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        getAttrs(attrs, defStyleAttr)
+  constructor(context: Context) : this(context, null, 0)
+  constructor(context: Context, attrs: AttributeSet) : this(context, attrs, 0)
+  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    getAttrs(attrs, defStyleAttr)
+  }
+
+  private fun initializeView(orientation: Int, backColor: Int) {
+    if(orientation == HORIZONTAL) {
+      mPager = HorizontalViewPager(context).apply {
+        overScrollMode = View.OVER_SCROLL_NEVER
+      }
+    } else {
+      mPager = VerticalViewPager(context).apply {
+        overScrollMode = View.OVER_SCROLL_NEVER
+      }
     }
 
-    private fun initializeView(orientation: Int, backColor: Int) {
+    addView(mPager)
+
+    mAdapter = ImageAdapter(context, backColor)
+    mPager.adapter = mAdapter
+  }
+
+  fun setOnImageTouchListener(onImageTouchListener: OnImageTouchListener) {
+    mAdapter.setOnImageTouchListener(onImageTouchListener)
+    mAdapter.notifyDataSetChanged()
+  }
+
+  fun setIndicator(indicatorColor: Int, indicatorSelectedColor: Int) {
+    mIndicator = CircleIndicator(context, getItemCount(), mOrientation, indicatorColor, indicatorSelectedColor).apply {
+      // FrameLayout 에 맞추기 위해 LinearLayout.LayoutParams 를 안 씀
+      val param = FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
         if(orientation == HORIZONTAL) {
-            mPager = HorizontalViewPager(context).apply {
-                overScrollMode = View.OVER_SCROLL_NEVER
-            }
+          gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+          bottomMargin = 30
         } else {
-            mPager = VerticalViewPager(context).apply {
-                overScrollMode = View.OVER_SCROLL_NEVER
-            }
+          gravity = Gravity.START or Gravity.TOP
+          topMargin = 30
+          leftMargin = 30
         }
 
-        addView(mPager)
-
-        mAdapter = ImageAdapter(context, backColor)
-        mPager.adapter = mAdapter
+      }
+      layoutParams = param
     }
+    addView(mIndicator)
 
-    fun setOnImageTouchListener(onImageTouchListener: OnImageTouchListener) {
-        mAdapter.setOnImageTouchListener(onImageTouchListener)
-        mAdapter.notifyDataSetChanged()
-    }
+    mPager.addOnPageChangeListener(mIndicator)
+  }
 
-    fun addItems(items: ArrayList<Int>) {
-        mAdapter.addItems(items)
-        mAdapter.notifyDataSetChanged()
+  fun getItemCount() = mAdapter.count
 
-        setIndicator(indicatorColor, indicatorSelectedColor)
-    }
+  private fun getAttrs(attrs: AttributeSet?, defStyleAttr: Int) {
+    val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ImageSlider, defStyleAttr, 0)
+    setTypeArray(typedArray)
+  }
 
-    fun setIndicator(indicatorColor: Int, indicatorSelectedColor: Int) {
-        mIndicator = CircleIndicator(context, getItemCount(), mOrientation, indicatorColor, indicatorSelectedColor).apply {
-            // FrameLayout 에 맞추기 위해 LinearLayout.LayoutParams 를 안 씀
-            var param = FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
-                if(orientation == HORIZONTAL) {
-                    gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
-                    bottomMargin = 30
-                } else {
-                    gravity = Gravity.START or Gravity.TOP
-                    topMargin = 30
-                    leftMargin = 30
-                }
+  private fun setTypeArray(typedArray: TypedArray) {
+    val imageOrientation = typedArray.getInt(R.styleable.ImageSlider_orientation, HORIZONTAL)
+    val backColor = typedArray.getColor(R.styleable.ImageSlider_background_color, ContextCompat.getColor(context, android.R.color.white))
+    indicatorColor = typedArray.getColor(R.styleable.ImageSlider_indicator_color, ContextCompat.getColor(context, R.color.colorIndicator))
+    indicatorSelectedColor = typedArray.getColor(R.styleable.ImageSlider_indicator_selected_color, ContextCompat.getColor(context, R.color.colorIndicatorSelected))
+    mOrientation = imageOrientation
+    initializeView(mOrientation, backColor)
 
-            }
-            layoutParams = param
-        }
-        addView(mIndicator)
+    // give it back to cache
+    typedArray.recycle()
+  }
 
-        mPager.addOnPageChangeListener(mIndicator)
-    }
+//  fun addItem(resourceId: Int) {
+//    mAdapter.addItem(resourceId)
+//  }
+//
+//  fun addItem(bitmap: Bitmap) {
+//    mAdapter.addItem(bitmap)
+//  }
+//
+//  fun addItem(uri: URI) {
+//    mAdapter.addItem(uri)
+//  }
+//
+//  fun addItem(drawable: Drawable) {
+//    mAdapter.addItem(drawable)
+//  }
+//
+//  fun addItem(string: String) {
+//    mAdapter.addItem(string)
+//  }
+//
+//  fun addItem(file: File) {
+//    mAdapter.addItem(file)
+//  }
+//
+//  fun addItem(model: Any) {
+//    mAdapter.addItem(model)
+//  }
 
-    fun getItemCount() = mAdapter.count
+  fun addItems(items: Collection<Any>) {
+    mAdapter.addItems(items)
+    mAdapter.notifyDataSetChanged()
 
-    private fun getAttrs(attrs: AttributeSet?, defStyleAttr: Int) {
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ImageSlider, defStyleAttr, 0)
-        setTypeArray(typedArray)
-    }
-
-    private fun setTypeArray(typedArray: TypedArray) {
-        val imageOrientation = typedArray.getInt(R.styleable.ImageSlider_orientation, HORIZONTAL)
-        val backColor = typedArray.getColor(R.styleable.ImageSlider_background_color, ContextCompat.getColor(context, android.R.color.white))
-        indicatorColor = typedArray.getColor(R.styleable.ImageSlider_indicator_color, ContextCompat.getColor(context, R.color.colorIndicator))
-        indicatorSelectedColor = typedArray.getColor(R.styleable.ImageSlider_indicator_selected_color, ContextCompat.getColor(context, R.color.colorIndicatorSelected))
-        mOrientation = imageOrientation
-        initializeView(mOrientation, backColor)
-
-        // give it back to cache
-        typedArray.recycle()
-    }
+    setIndicator(indicatorColor, indicatorSelectedColor)
+  }
 }

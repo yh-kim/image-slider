@@ -22,6 +22,6 @@ package com.pickth.imageslider.listener
  */
 
 interface OnImageTouchListener {
-    fun onClickListener(position: Int)
-    fun onLongClickListener(position: Int)
+  fun onClickListener(position: Int)
+  fun onLongClickListener(position: Int)
 }

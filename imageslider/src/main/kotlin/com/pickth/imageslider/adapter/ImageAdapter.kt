@@ -17,6 +17,8 @@
 package com.pickth.imageslider.adapter
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.support.v4.view.PagerAdapter
 import android.view.LayoutInflater
 import android.view.View
@@ -26,56 +28,58 @@ import com.bumptech.glide.request.RequestOptions
 import com.pickth.imageslider.R
 import com.pickth.imageslider.listener.OnImageTouchListener
 import kotlinx.android.synthetic.main.slide.view.*
+import java.io.File
+import java.net.URI
 
 /**
  * Created by yonghoon on 2018-01-29
  * Blog   : http://blog.pickth.com
  */
 
-class ImageAdapter(context: Context, val backColor: Int): PagerAdapter() {
-    private var inflater = LayoutInflater.from(context)
-    private var mIntItems = ArrayList<Int>()
-    private var mTouchListener: OnImageTouchListener? = null
+class ImageAdapter(context: Context, val backColor: Int) : PagerAdapter() {
+  private var inflater = LayoutInflater.from(context)
+  private var mImageItems = ArrayList<Any>()
+  private var mTouchListener: OnImageTouchListener? = null
 
-    fun addItems(items: ArrayList<Int>) {
-        mIntItems.clear()
-        mIntItems.addAll(items)
+  fun setOnImageTouchListener(onImageTouchListener: OnImageTouchListener) {
+    mTouchListener = onImageTouchListener
+  }
+
+  override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
+    container?.removeView(`object` as View)
+  }
+
+  override fun instantiateItem(container: ViewGroup, position: Int): Any {
+    val imageView = inflater.inflate(R.layout.slide, container, false).apply {
+
+      slide_image.setBackgroundColor(backColor)
+
+
+      Glide.with(context).load(mImageItems[position]).apply(RequestOptions().fitCenter()).into(
+          slide_image
+      )
+      setOnClickListener { mTouchListener?.onClickListener(position) }
+      setOnLongClickListener {
+        mTouchListener?.onLongClickListener(position)
+        true
+      }
     }
 
-    fun addItem(item: Int) {
-        mIntItems.add(item)
-    }
+    container.addView(imageView)
+    return imageView
+  }
 
-    fun setOnImageTouchListener(onImageTouchListener: OnImageTouchListener) {
-        mTouchListener = onImageTouchListener
-    }
+  override fun isViewFromObject(view: View, `object`: Any?): Boolean = view == `object`
 
-    override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
-        container?.removeView(`object` as View)
-    }
+  override fun getCount(): Int = mImageItems.size
 
-    override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val imageView = inflater.inflate(R.layout.slide,
-                container,
-                false).apply {
+  fun addItem(item: Any) {
+    mImageItems.add(item)
+    notifyDataSetChanged()
+  }
 
-            slide_image.setBackgroundColor(backColor)
-            Glide.with(context)
-                    .load(mIntItems[position])
-                    .apply(RequestOptions().fitCenter())
-                    .into(slide_image)
-            setOnClickListener { mTouchListener?.onClickListener(position) }
-            setOnLongClickListener {
-                mTouchListener?.onLongClickListener(position)
-                true
-            }
-        }
-
-        container.addView(imageView)
-        return imageView
-    }
-
-    override fun isViewFromObject(view: View, `object`: Any?): Boolean = view == `object`
-
-    override fun getCount(): Int = mIntItems.size
+  fun addItems(items: Collection<Any>) {
+    mImageItems.clear()
+    mImageItems.addAll(items)
+  }
 }

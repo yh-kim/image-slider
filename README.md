@@ -12,7 +12,7 @@ Library to implement the image slider from viewpager (minSdkVersion=15).<br>
 #### Gradle
 ```groovy
 dependencies {
-    implementation 'com.pickth:imageslider:1.0.12'
+    implementation 'com.pickth:imageslider:1.0.13'
 }
 ```
 
@@ -27,30 +27,30 @@ dependencies {
 #### Java
 ```java
 @Override
-protected void onCreate(Bundle savedInstanceState) {
+  protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    ArrayList<Integer> items = new ArrayList<>();
+    ArrayList items = new ArrayList<Integer>();
     items.add(R.drawable.a);
     items.add(R.drawable.b);
     items.add(R.drawable.c);
 
     ImageSlider is = findViewById(R.id.is_main);
-    is.addItems(items);
-    
     is.setOnImageTouchListener(new OnImageTouchListener() {
-                @Override
-                public void onClickListener(int position) {
-                    // do something
-                }
-    
-                @Override
-                public void onLongClickListener(int position) {
-                    // do something
-                }
-            });
-}
+      @Override
+      public void onClickListener(int position) {
+        // do something
+      }
+
+      @Override
+      public void onLongClickListener(int position) {
+        // do something
+      }
+    });
+    is.addItems(items);
+    is.addItem(R.drawable.a);
+  }
 ```
 
 #### Kotlin
@@ -60,24 +60,25 @@ override fun onCreate(savedInstanceState: Bundle?) {
     setContentView(R.layout.activity_main)
 
     var items = ArrayList<Int>().apply {
-        add(R.drawable.habit)
-        add(R.drawable.movie_image)
-        add(R.drawable.movie_image)
-        add(R.drawable.movie_image)
+      add(R.drawable.habit)
+      add(R.drawable.movie_image)
+      add(R.drawable.movie_image)
+      add(R.drawable.movie_image)
     }
 
+    is_main.setOnImageTouchListener(object : OnImageTouchListener {
+      override fun onClickListener(position: Int) {
+        // do something
+      }
+
+      override fun onLongClickListener(position: Int) {
+        // do something
+      }
+    })
+
     is_main.addItems(items)
-    
-    is_main.setOnImageTouchListener(object: OnImageTouchListener {
-                override fun onClickListener(position: Int) {
-                    // do something
-                }
-    
-                override fun onLongClickListener(position: Int) {
-                    // do something
-                }
-            })
-}
+    is_main.addItem(R.drawable.habit)
+  }
 ```
 
 #### Customization options

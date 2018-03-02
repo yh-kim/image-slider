@@ -20,6 +20,8 @@ import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.pickth.imageslider.R
@@ -30,7 +32,7 @@ import org.jetbrains.anko.backgroundDrawable
  * Blog   : http://blog.pickth.com
  */
 
-class CircleIndicator(context: Context, count: Int, circleOrientation: Int, val indicatorColor: Int, val indicatorSelectedColor: Int) :
+class CircleIndicator(context: Context, count: Int = 0, circleOrientation: Int, val indicatorColor: Int, val indicatorSelectedColor: Int) :
     LinearLayout(context, null, 0),
     ViewPager.OnPageChangeListener {
   private var isFirst = true
@@ -42,23 +44,36 @@ class CircleIndicator(context: Context, count: Int, circleOrientation: Int, val 
 
   init {
     orientation = circleOrientation
-    initializeView(count)
+    initializeView()
   }
 
-  private fun initializeView(count: Int) {
+  private fun initializeView() {
+    addItems(itemCount)
+  }
+
+  fun addItems(count: Int) {
     for(i in 0 until count) {
-      val ivCircle = ImageView(context).apply {
-        backgroundDrawable = circleView
-      }
-
-      addView(ivCircle)
-      mCircleViews.add(ivCircle)
+      addItem()
     }
-
-    setViewSize(size)
   }
 
-  private fun setViewSize(size: Int) {
+  fun addItem() {
+    val ivCircle = ImageView(context).apply {
+      backgroundDrawable = circleView
+    }
+    setItemViewParam(ivCircle, size)
+
+    addView(ivCircle)
+    mCircleViews.add(ivCircle)
+  }
+
+  fun removeAllItems() {
+    mCircleViews.clear()
+    removeAllViews()
+    itemCount = 0
+  }
+
+  private fun setItemViewParam(view: View, size: Int) {
     val param = LinearLayout.LayoutParams(size, size)
 //        val margin = size/10
 
@@ -70,9 +85,7 @@ class CircleIndicator(context: Context, count: Int, circleOrientation: Int, val 
       param.setMargins(margin, 0, margin, 0)
     }
 
-    for(i in mCircleViews) {
-      i.layoutParams = param
-    }
+    view.layoutParams = param
   }
 
   override fun onPageScrollStateChanged(state: Int) {

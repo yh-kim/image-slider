@@ -17,8 +17,6 @@
 package com.pickth.imageslider.adapter
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.support.v4.view.PagerAdapter
 import android.view.LayoutInflater
 import android.view.View
@@ -28,8 +26,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.pickth.imageslider.R
 import com.pickth.imageslider.listener.OnImageTouchListener
 import kotlinx.android.synthetic.main.slide.view.*
-import java.io.File
-import java.net.URI
 
 /**
  * Created by yonghoon on 2018-01-29
@@ -75,11 +71,9 @@ class ImageAdapter(context: Context, val backColor: Int) : PagerAdapter() {
 
   fun addItem(item: Any) {
     mImageItems.add(item)
-    notifyDataSetChanged()
   }
 
   fun addItems(items: Collection<Any>) {
-    mImageItems.clear()
     mImageItems.addAll(items)
   }
 }

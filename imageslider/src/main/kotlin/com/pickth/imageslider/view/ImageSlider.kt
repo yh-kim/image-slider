@@ -44,7 +44,7 @@ class ImageSlider : FrameLayout {
 
   private lateinit var mAdapter: ImageAdapter
   private lateinit var mPager: ViewPager
-  private lateinit var mIndicator: CircleIndicator
+  private var mIndicator: CircleIndicator? = null
   private var mOrientation = HORIZONTAL
   private var indicatorColor = 0
   private var indicatorSelectedColor = 0
@@ -66,10 +66,14 @@ class ImageSlider : FrameLayout {
       }
     }
 
+    // view pager
     addView(mPager)
 
     mAdapter = ImageAdapter(context, backColor)
     mPager.adapter = mAdapter
+
+    // indicator
+    setIndicator(indicatorColor, indicatorSelectedColor)
   }
 
   fun setOnImageTouchListener(onImageTouchListener: OnImageTouchListener) {
@@ -98,6 +102,15 @@ class ImageSlider : FrameLayout {
     mPager.addOnPageChangeListener(mIndicator)
   }
 
+  /**
+   * View.VISIBLE = 0
+   * View.INVISIBLE = 4
+   * View.GONE = 8
+   */
+  fun setIndicatorVisibility(visibility: Int) {
+    mIndicator?.visibility = visibility
+  }
+
   fun getItemCount() = mAdapter.count
 
   private fun getAttrs(attrs: AttributeSet?, defStyleAttr: Int) {
@@ -117,38 +130,15 @@ class ImageSlider : FrameLayout {
     typedArray.recycle()
   }
 
-//  fun addItem(resourceId: Int) {
-//    mAdapter.addItem(resourceId)
-//  }
-//
-//  fun addItem(bitmap: Bitmap) {
-//    mAdapter.addItem(bitmap)
-//  }
-//
-//  fun addItem(uri: URI) {
-//    mAdapter.addItem(uri)
-//  }
-//
-//  fun addItem(drawable: Drawable) {
-//    mAdapter.addItem(drawable)
-//  }
-//
-//  fun addItem(string: String) {
-//    mAdapter.addItem(string)
-//  }
-//
-//  fun addItem(file: File) {
-//    mAdapter.addItem(file)
-//  }
-//
-//  fun addItem(model: Any) {
-//    mAdapter.addItem(model)
-//  }
-
   fun addItems(items: Collection<Any>) {
     mAdapter.addItems(items)
     mAdapter.notifyDataSetChanged()
+    mIndicator?.addItems(items.size)
+  }
 
-    setIndicator(indicatorColor, indicatorSelectedColor)
+  fun addItem(item: Any) {
+    mAdapter.addItem(item)
+    mAdapter.notifyDataSetChanged()
+    mIndicator?.addItem()
   }
 }
